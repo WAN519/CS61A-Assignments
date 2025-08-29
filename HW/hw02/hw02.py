@@ -1,4 +1,5 @@
 from operator import add, mul
+from unittest import result
 
 square = lambda x: x * x
 
@@ -18,20 +19,26 @@ def product(n, term):
     n: a positive integer
     term:  a function that takes one argument to produce the term
 
-    >>> product(3, identity)  # 1 * 2 * 3
-    6
-    >>> product(5, identity)  # 1 * 2 * 3 * 4 * 5
-    120
-    >>> product(3, square)    # 1^2 * 2^2 * 3^2
-    36
+ 36
     >>> product(5, square)    # 1^2 * 2^2 * 3^2 * 4^2 * 5^2
     14400
     >>> product(3, increment) # (1+1) * (2+1) * (3+1)
     24
     >>> product(3, triple)    # 1*3 * 2*3 * 3*3
     162
+    >>> product(3, identity)  # 1 * 2 * 3
+    6
+    >>> product(5, identity)  # 1 * 2 * 3 * 4 * 5
+    120
+    >>> product(3, square)    # 1^2 * 2^2 * 3^2
+    36
     """
     "*** YOUR CODE HERE ***"
+    result = 1
+    for i in range(1, n+1):
+        result *= term(i)
+
+    return result
 
 
 def accumulate(fuse, start, n, term):
@@ -54,6 +61,10 @@ def accumulate(fuse, start, n, term):
     19
     """
     "*** YOUR CODE HERE ***"
+    result = start
+    for i in range(1, n+1):
+        result = fuse(result, term(i))
+    return result
 
 
 def summation_using_accumulate(n, term):
@@ -68,7 +79,7 @@ def summation_using_accumulate(n, term):
     >>> [type(x).__name__ for x in ast.parse(inspect.getsource(summation_using_accumulate)).body[0].body]
     ['Expr', 'Return']
     """
-    return ____
+    return accumulate(add, 0, n, term)
 
 
 def product_using_accumulate(n, term):
@@ -83,7 +94,7 @@ def product_using_accumulate(n, term):
     >>> [type(x).__name__ for x in ast.parse(inspect.getsource(product_using_accumulate)).body[0].body]
     ['Expr', 'Return']
     """
-    return ____
+    return accumulate(mul, 1, n, term)
 
 
 def make_repeater(f, n):
@@ -101,3 +112,9 @@ def make_repeater(f, n):
     """
     "*** YOUR CODE HERE ***"
 
+    def repeater(j):
+        result = j
+        for i in range(n):
+            result = f(result)
+        return result
+    return repeater
